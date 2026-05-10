@@ -1,6 +1,12 @@
 import { useScroll, useTransform, motion } from "framer-motion";
 import { useRef } from "react";
 
+// ─── ФОТО ХЕДЕРА ──────────────────────────────────────────────
+// Чтобы добавить своё фото: вставь URL ниже вместо null
+// Пример: const HERO_IMAGE = "https://example.com/my-photo.jpg";
+const HERO_IMAGE: string | null = null;
+// ──────────────────────────────────────────────────────────────
+
 export default function Hero() {
   const container = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -14,15 +20,34 @@ export default function Hero() {
     <div
       ref={container}
       id="about"
-      className="relative flex items-end justify-start h-screen overflow-hidden"
+      className="relative flex items-end justify-start h-screen overflow-hidden bg-neutral-950"
     >
       <motion.div style={{ y }} className="absolute inset-0 w-full h-full">
-        <img
-          src="https://cdn.poehali.dev/projects/819b0f3f-e30c-411b-b80e-f9ab198e7f93/files/35ad01b6-1156-4c8a-b717-32844ff80fef.jpg"
-          alt="Bauhaus geometric design"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+        {HERO_IMAGE ? (
+          <>
+            <img
+              src={HERO_IMAGE}
+              alt="Hero background"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+          </>
+        ) : (
+          <div className="absolute inset-0 w-full h-full">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0">
+              <rect width="100%" height="100%" fill="#0a0a0a" />
+              <rect x="60%" y="0" width="40%" height="55%" fill="#111" />
+              <rect x="0" y="65%" width="35%" height="35%" fill="#111" />
+              <circle cx="75%" cy="28%" r="18%" fill="none" stroke="#C8FF00" strokeWidth="1" opacity="0.15" />
+              <circle cx="75%" cy="28%" r="10%" fill="none" stroke="#C8FF00" strokeWidth="0.5" opacity="0.1" />
+              <line x1="60%" y1="0" x2="60%" y2="100%" stroke="#222" strokeWidth="1" />
+              <line x1="0" y1="55%" x2="100%" y2="55%" stroke="#222" strokeWidth="1" />
+              <rect x="62%" y="2%" width="12%" height="12%" fill="#C8FF00" opacity="0.08" />
+              <rect x="76%" y="2%" width="6%" height="6%" fill="none" stroke="#C8FF00" strokeWidth="1" opacity="0.2" />
+            </svg>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+          </div>
+        )}
       </motion.div>
 
       <motion.div style={{ opacity }} className="relative z-10 px-8 md:px-16 pb-16 md:pb-24 max-w-4xl">

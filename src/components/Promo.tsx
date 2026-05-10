@@ -1,6 +1,12 @@
 import { useScroll, useTransform, motion } from "framer-motion";
 import { useRef } from "react";
 
+// ─── ФОТО СЕКЦИИ "ПРОЦЕСС" ────────────────────────────────────
+// Чтобы добавить своё фото: вставь URL ниже вместо null
+// Пример: const PROMO_IMAGE = "https://example.com/my-photo.jpg";
+const PROMO_IMAGE: string | null = null;
+// ──────────────────────────────────────────────────────────────
+
 export default function Promo() {
   const container = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -17,12 +23,32 @@ export default function Promo() {
     >
       <div className="fixed top-[-10vh] left-0 h-[120vh] w-full">
         <motion.div style={{ y }} className="relative w-full h-full">
-          <img
-            src="https://cdn.poehali.dev/projects/819b0f3f-e30c-411b-b80e-f9ab198e7f93/files/9ba1505f-64b1-4a52-8e24-7f0a663faf1e.jpg"
-            alt="Neogeo abstract composition"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-black/50" />
+          {PROMO_IMAGE ? (
+            <>
+              <img
+                src={PROMO_IMAGE}
+                alt="Promo background"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/50" />
+            </>
+          ) : (
+            <div className="absolute inset-0 bg-neutral-950">
+              <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100%" height="100%" fill="#080808" />
+                <rect x="0" y="0" width="50%" height="50%" fill="#0f0f0f" />
+                <rect x="50%" y="50%" width="50%" height="50%" fill="#0f0f0f" />
+                <circle cx="50%" cy="50%" r="30%" fill="none" stroke="#C8FF00" strokeWidth="0.5" opacity="0.12" />
+                <circle cx="50%" cy="50%" r="18%" fill="none" stroke="#C8FF00" strokeWidth="0.5" opacity="0.08" />
+                <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#1a1a1a" strokeWidth="1" />
+                <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#1a1a1a" strokeWidth="1" />
+                <rect x="20%" y="20%" width="15%" height="15%" fill="none" stroke="#C8FF00" strokeWidth="0.5" opacity="0.15" />
+                <rect x="65%" y="65%" width="15%" height="15%" fill="#C8FF00" opacity="0.04" />
+                <line x1="0" y1="0" x2="100%" y2="100%" stroke="#151515" strokeWidth="1" />
+              </svg>
+              <div className="absolute inset-0 bg-black/60" />
+            </div>
+          )}
         </motion.div>
       </div>
 
