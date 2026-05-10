@@ -309,7 +309,7 @@ function ChapterBlock({ chapter, index }: { chapter: typeof chapters[0]; index: 
             className="text-xs uppercase tracking-[0.4em] mb-4 font-medium"
             style={{ color: chapter.dark ? chapter.accent : "#888" }}
           >
-            {experimental ? `Глава ${chapter.number} · Опционально` : `Глава ${chapter.number}`}
+            {`Глава ${chapter.number}`}
           </p>
           <h2
             className={`text-4xl md:text-5xl font-black leading-[0.9] tracking-tight uppercase mb-6 whitespace-pre-line ${chapter.textColor}`}
