@@ -18,8 +18,8 @@ export default function Hero() {
     >
       <motion.div style={{ y }} className="absolute inset-0 w-full h-full">
         <img
-          src="/images/mountain-landscape.jpg"
-          alt="Portfolio background"
+          src="https://cdn.poehali.dev/projects/819b0f3f-e30c-411b-b80e-f9ab198e7f93/files/72951b67-5b8b-4d7d-afb2-5aff8173786b.jpg"
+          alt="Designer workspace"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />

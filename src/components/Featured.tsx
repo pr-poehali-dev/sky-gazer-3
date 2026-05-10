@@ -1,4 +1,4 @@
-import { useScroll, useTransform, motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 
@@ -158,6 +158,22 @@ const chapters = [
       { label: "Проект 3" },
     ],
   },
+  {
+    number: "05",
+    title: "Эксперименты\nи Творчество",
+    description: "Личные проекты, арт-эксперименты, нестандартные решения — пространство без ограничений и брифов, где рождаются самые смелые идеи.",
+    tags: ["Арт-проекты", "Motion", "Коллажи", "Шрифты"],
+    accent: "#C8FF00",
+    bg: "bg-neutral-950",
+    textColor: "text-white",
+    dark: true,
+    experimental: true,
+    photos: [
+      { label: "Эксперимент 1" },
+      { label: "Эксперимент 2" },
+      { label: "Эксперимент 3" },
+    ],
+  },
 ];
 
 function PhotoGallery({ photos, dark }: { photos: { label: string; src?: string }[]; dark: boolean }) {
@@ -250,23 +266,41 @@ function PhotoGallery({ photos, dark }: { photos: { label: string; src?: string 
 function ChapterBlock({ chapter, index }: { chapter: typeof chapters[0]; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const experimental = "experimental" in chapter && chapter.experimental;
 
   return (
     <div
       ref={ref}
-      className={`${chapter.bg} py-20 px-8 md:px-16 lg:px-24`}
+      id={experimental ? "works" : undefined}
+      className={`${chapter.bg} py-20 px-8 md:px-16 lg:px-24 relative overflow-hidden`}
     >
+      {experimental && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div
+            className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full opacity-[0.06]"
+            style={{ background: "radial-gradient(circle, #C8FF00, transparent 70%)" }}
+          />
+          <div
+            className="absolute -bottom-24 -left-24 w-[400px] h-[400px] rounded-full opacity-[0.04]"
+            style={{ background: "radial-gradient(circle, #C8FF00, transparent 70%)" }}
+          />
+          <div className="absolute top-8 left-8 text-[#C8FF00]/5 text-[20vw] font-black leading-none select-none uppercase">
+            ✦
+          </div>
+        </div>
+      )}
+
       <motion.div
         initial={{ opacity: 0, y: 60 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.8, delay: 0.1 }}
-        className={`w-full max-w-6xl mx-auto flex flex-col lg:flex-row lg:items-start gap-12 lg:gap-20 ${index % 2 === 1 ? "lg:flex-row-reverse" : ""}`}
+        className={`w-full max-w-6xl mx-auto flex flex-col lg:flex-row lg:items-start gap-12 lg:gap-20 relative z-10 ${index % 2 === 1 ? "lg:flex-row-reverse" : ""}`}
       >
         <div className="flex-1 lg:pt-4">
           <div className="flex items-start mb-2">
             <span
               className="text-[7rem] font-black leading-none select-none"
-              style={{ color: chapter.accent, opacity: 0.12 }}
+              style={{ color: chapter.accent, opacity: experimental ? 0.25 : 0.12 }}
             >
               {chapter.number}
             </span>
@@ -275,12 +309,19 @@ function ChapterBlock({ chapter, index }: { chapter: typeof chapters[0]; index: 
             className="text-xs uppercase tracking-[0.4em] mb-4 font-medium"
             style={{ color: chapter.dark ? chapter.accent : "#888" }}
           >
-            Глава {chapter.number}
+            {experimental ? `Глава ${chapter.number} · Опционально` : `Глава ${chapter.number}`}
           </p>
           <h2
             className={`text-4xl md:text-5xl font-black leading-[0.9] tracking-tight uppercase mb-6 whitespace-pre-line ${chapter.textColor}`}
           >
-            {chapter.title}
+            {experimental
+              ? <>
+                  Эксперименты<br />
+                  <span style={{ WebkitTextStroke: "2px #C8FF00", color: "transparent" }}>
+                    и Творчество
+                  </span>
+                </>
+              : chapter.title}
           </h2>
           <p className={`text-base leading-relaxed mb-8 max-w-sm ${chapter.dark ? "text-white/60" : "text-neutral-500"}`}>
             {chapter.description}
@@ -289,9 +330,9 @@ function ChapterBlock({ chapter, index }: { chapter: typeof chapters[0]; index: 
             {chapter.tags.map((tag) => (
               <span
                 key={tag}
-                className={`text-xs uppercase tracking-wider px-3 py-1.5 border ${
+                className={`text-xs uppercase tracking-wider px-3 py-1.5 border transition-colors duration-300 ${
                   chapter.dark
-                    ? "border-white/20 text-white/50"
+                    ? "border-white/20 text-white/50 hover:border-[#C8FF00] hover:text-[#C8FF00]"
                     : "border-neutral-200 text-neutral-400"
                 }`}
               >
@@ -307,72 +348,12 @@ function ChapterBlock({ chapter, index }: { chapter: typeof chapters[0]; index: 
   );
 }
 
-function ExperimentsBlock() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "end start"] });
-  const rotate = useTransform(scrollYProgress, [0, 1], [-5, 5]);
-
-  return (
-    <div
-      ref={containerRef}
-      id="works"
-      className="min-h-screen bg-neutral-950 flex items-center justify-center px-8 md:px-16 relative overflow-hidden"
-    >
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <motion.div
-          style={{ rotate }}
-          className="text-[30vw] font-black text-white/[0.03] leading-none select-none uppercase"
-        >
-          05
-        </motion.div>
-      </div>
-
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0, y: 60 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.9 }}
-        className="relative z-10 text-center max-w-3xl"
-      >
-        <p className="text-[#C8FF00] text-xs uppercase tracking-[0.5em] mb-8 font-medium">
-          Глава 05 · Опционально
-        </p>
-        <h2 className="text-5xl md:text-7xl font-black text-white uppercase leading-[0.85] tracking-tight mb-8">
-          Эксперименты<br />
-          <span className="text-white/20">&amp;</span>{" "}
-          <span style={{ WebkitTextStroke: "2px #C8FF00", color: "transparent" }}>
-            Творчество
-          </span>
-        </h2>
-        <p className="text-white/40 text-base md:text-lg leading-relaxed mb-12 max-w-xl mx-auto">
-          Личные проекты, арт-эксперименты, нестандартные решения — пространство без ограничений и брифов, где рождаются самые смелые идеи.
-        </p>
-        <div className="flex flex-wrap gap-3 justify-center">
-          {["Арт-проекты", "Генеративный дизайн", "Motion", "Коллажи", "Шрифты"].map((tag) => (
-            <span
-              key={tag}
-              className="text-xs uppercase tracking-wider px-4 py-2 border border-white/10 text-white/30 hover:border-[#C8FF00] hover:text-[#C8FF00] transition-colors duration-300 cursor-default"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-        <div className="mt-16 w-px h-16 bg-white/10 mx-auto" />
-        <p className="text-white/20 text-xs uppercase tracking-widest mt-4">Скоро</p>
-      </motion.div>
-    </div>
-  );
-}
-
 export default function Featured() {
   return (
     <section>
       {chapters.map((chapter, index) => (
         <ChapterBlock key={chapter.number} chapter={chapter} index={index} />
       ))}
-      <ExperimentsBlock />
     </section>
   );
 }

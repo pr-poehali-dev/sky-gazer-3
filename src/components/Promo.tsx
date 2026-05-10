@@ -18,8 +18,8 @@ export default function Promo() {
       <div className="fixed top-[-10vh] left-0 h-[120vh] w-full">
         <motion.div style={{ y }} className="relative w-full h-full">
           <img
-            src="/images/spiral-circles.jpg"
-            alt="Abstract design"
+            src="https://cdn.poehali.dev/projects/819b0f3f-e30c-411b-b80e-f9ab198e7f93/files/517184d7-70d9-473e-be0a-ee57ed73b7ea.jpg"
+            alt="Abstract graphic design"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-black/50" />
