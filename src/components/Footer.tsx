@@ -52,7 +52,7 @@ export default function Footer() {
 
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
               <h1 className="text-[18vw] sm:text-[16vw] lg:text-[13vw] leading-[0.8] font-black tracking-tight uppercase">
-                <span className="text-white">КУ<span style={{ marginLeft: "0.06em" }}>З</span>НЕЦОВ</span>
+                <span className="text-white">КУЗНЕЦОВ</span>
               </h1>
               <div className="text-right">
                 <p className="text-neutral-600 text-xs uppercase tracking-widest">{new Date().getFullYear()}</p>
