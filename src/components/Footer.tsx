@@ -55,7 +55,7 @@ export default function Footer() {
                 className="text-[18vw] sm:text-[16vw] lg:text-[13vw] leading-[0.8] text-white font-black tracking-tight uppercase"
                 style={{ WebkitTextStroke: "1px rgba(255,255,255,0.1)" }}
               >
-                КУЗНЕЦОВ
+                КУ<span style={{ marginLeft: "0.06em" }}>З</span>НЕЦОВ
               </h1>
               <div className="text-right">
                 <p className="text-neutral-600 text-xs uppercase tracking-widest">{new Date().getFullYear()}</p>
