@@ -207,12 +207,7 @@ function PhotoGallery({ photos, dark }: { photos: { label: string; src?: string 
             )}
           </div>
 
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-200 flex items-center justify-center">
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/60 px-3 py-1.5 flex items-center gap-2">
-              <Icon name="Expand" size={14} className="text-white" />
-              <span className="text-white text-xs uppercase tracking-wider">Открыть</span>
-            </div>
-          </div>
+          <div className="absolute inset-0 ring-0 group-hover:ring-2 ring-[#C8FF00] ring-inset transition-all duration-200" />
 
           <button
             onClick={(e) => { e.stopPropagation(); setActive((prev) => (prev - 1 + photos.length) % photos.length); }}
