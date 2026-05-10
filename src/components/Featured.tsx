@@ -1,6 +1,101 @@
-import { useScroll, useTransform, motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useScroll, useTransform, motion, useInView, AnimatePresence } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
+
+function Lightbox({
+  photos,
+  initialIndex,
+  onClose,
+}: {
+  photos: { label: string; src?: string }[];
+  initialIndex: number;
+  onClose: () => void;
+}) {
+  const [current, setCurrent] = useState(initialIndex);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight") setCurrent((p) => (p + 1) % photos.length);
+      if (e.key === "ArrowLeft") setCurrent((p) => (p - 1 + photos.length) % photos.length);
+    };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [photos.length, onClose]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25 }}
+      className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center"
+      onClick={onClose}
+    >
+      <button
+        onClick={onClose}
+        className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center text-white/60 hover:text-white transition-colors"
+      >
+        <Icon name="X" size={24} />
+      </button>
+
+      <button
+        onClick={(e) => { e.stopPropagation(); setCurrent((p) => (p - 1 + photos.length) % photos.length); }}
+        className="absolute left-4 md:left-8 w-12 h-12 flex items-center justify-center text-white/40 hover:text-white transition-colors"
+      >
+        <Icon name="ChevronLeft" size={32} />
+      </button>
+
+      <motion.div
+        key={current}
+        initial={{ opacity: 0, scale: 0.96 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.2 }}
+        className="w-full max-w-5xl mx-16 aspect-[4/3] flex items-center justify-center"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {photos[current].src ? (
+          <img
+            src={photos[current].src}
+            alt={photos[current].label}
+            className="w-full h-full object-contain"
+          />
+        ) : (
+          <div className="w-full h-full bg-neutral-900 flex flex-col items-center justify-center gap-4">
+            <Icon name="Image" size={56} className="text-white/10" />
+            <p className="text-white/20 text-sm uppercase tracking-widest">{photos[current].label}</p>
+          </div>
+        )}
+      </motion.div>
+
+      <button
+        onClick={(e) => { e.stopPropagation(); setCurrent((p) => (p + 1) % photos.length); }}
+        className="absolute right-4 md:right-8 w-12 h-12 flex items-center justify-center text-white/40 hover:text-white transition-colors"
+      >
+        <Icon name="ChevronRight" size={32} />
+      </button>
+
+      <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2">
+        {photos.map((_, i) => (
+          <button
+            key={i}
+            onClick={(e) => { e.stopPropagation(); setCurrent(i); }}
+            className="w-1.5 h-1.5 rounded-full transition-all duration-200"
+            style={{ backgroundColor: i === current ? "#C8FF00" : "rgba(255,255,255,0.2)" }}
+          />
+        ))}
+      </div>
+
+      <div className="absolute bottom-6 right-6 text-white/20 text-xs uppercase tracking-widest">
+        {current + 1} / {photos.length}
+      </div>
+    </motion.div>
+  );
+}
 
 const chapters = [
   {
@@ -65,62 +160,90 @@ const chapters = [
   },
 ];
 
-function PhotoGallery({ photos, dark }: { photos: { label: string }[]; dark: boolean }) {
+function PhotoGallery({ photos, dark }: { photos: { label: string; src?: string }[]; dark: boolean }) {
   const [active, setActive] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   return (
-    <div className="flex-1 flex flex-col gap-3">
-      <div className="relative aspect-[4/3] overflow-hidden group">
-        <div
-          className={`w-full h-full flex items-center justify-center ${dark ? "bg-neutral-800" : "bg-neutral-200"}`}
-        >
-          <div className="text-center">
-            <Icon name="Image" size={36} className={dark ? "text-white/10 mx-auto mb-2" : "text-neutral-300 mx-auto mb-2"} />
-            <p className={`text-xs uppercase tracking-widest ${dark ? "text-white/20" : "text-neutral-300"}`}>
-              {photos[active].label}
-            </p>
+    <>
+      <AnimatePresence>
+        {lightboxIndex !== null && (
+          <Lightbox
+            photos={photos}
+            initialIndex={lightboxIndex}
+            onClose={() => setLightboxIndex(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      <div className="flex-1 flex flex-col gap-3">
+        <div className="relative aspect-[4/3] overflow-hidden group cursor-zoom-in" onClick={() => setLightboxIndex(active)}>
+          <div className={`w-full h-full flex items-center justify-center ${dark ? "bg-neutral-800" : "bg-neutral-200"}`}>
+            {photos[active].src ? (
+              <img src={photos[active].src} alt={photos[active].label} className="w-full h-full object-cover" />
+            ) : (
+              <div className="text-center">
+                <Icon name="Image" size={36} className={dark ? "text-white/10 mx-auto mb-2" : "text-neutral-300 mx-auto mb-2"} />
+                <p className={`text-xs uppercase tracking-widest ${dark ? "text-white/20" : "text-neutral-300"}`}>
+                  {photos[active].label}
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-200 flex items-center justify-center">
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/60 px-3 py-1.5 flex items-center gap-2">
+              <Icon name="Expand" size={14} className="text-white" />
+              <span className="text-white text-xs uppercase tracking-wider">Открыть</span>
+            </div>
+          </div>
+
+          <button
+            onClick={(e) => { e.stopPropagation(); setActive((prev) => (prev - 1 + photos.length) % photos.length); }}
+            className={`absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${dark ? "bg-white/10 text-white hover:bg-white/20" : "bg-black/10 text-black hover:bg-black/20"}`}
+          >
+            <Icon name="ChevronLeft" size={16} />
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); setActive((prev) => (prev + 1) % photos.length); }}
+            className={`absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${dark ? "bg-white/10 text-white hover:bg-white/20" : "bg-black/10 text-black hover:bg-black/20"}`}
+          >
+            <Icon name="ChevronRight" size={16} />
+          </button>
+
+          <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5">
+            {photos.map((_, i) => (
+              <button
+                key={i}
+                onClick={(e) => { e.stopPropagation(); setActive(i); }}
+                className="w-1.5 h-1.5 rounded-full transition-all duration-200"
+                style={{ backgroundColor: i === active ? "#C8FF00" : dark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.15)" }}
+              />
+            ))}
           </div>
         </div>
-        <button
-          onClick={() => setActive((prev) => (prev - 1 + photos.length) % photos.length)}
-          className={`absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${dark ? "bg-white/10 text-white hover:bg-white/20" : "bg-black/10 text-black hover:bg-black/20"}`}
-        >
-          <Icon name="ChevronLeft" size={16} />
-        </button>
-        <button
-          onClick={() => setActive((prev) => (prev + 1) % photos.length)}
-          className={`absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${dark ? "bg-white/10 text-white hover:bg-white/20" : "bg-black/10 text-black hover:bg-black/20"}`}
-        >
-          <Icon name="ChevronRight" size={16} />
-        </button>
-        <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5">
-          {photos.map((_, i) => (
+
+        <div className="grid grid-cols-3 gap-3">
+          {photos.map((photo, i) => (
             <button
               key={i}
-              onClick={() => setActive(i)}
-              className="w-1.5 h-1.5 rounded-full transition-all duration-200"
-              style={{ backgroundColor: i === active ? "#C8FF00" : dark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.15)" }}
-            />
+              onClick={() => { setActive(i); setLightboxIndex(i); }}
+              className={`relative aspect-square overflow-hidden transition-all duration-200 group/thumb ${dark ? "bg-neutral-800" : "bg-neutral-200"}`}
+              style={{ outline: active === i ? "2px solid #C8FF00" : "2px solid transparent" }}
+            >
+              {photo.src ? (
+                <img src={photo.src} alt={photo.label} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <span className={`text-xs font-medium ${dark ? "text-white/20" : "text-neutral-300"}`}>{i + 1}</span>
+                </div>
+              )}
+              <div className="absolute inset-0 bg-black/0 group-hover/thumb:bg-black/30 transition-colors duration-150" />
+            </button>
           ))}
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-3">
-        {photos.map((photo, i) => (
-          <button
-            key={i}
-            onClick={() => setActive(i)}
-            className={`relative aspect-square overflow-hidden transition-all duration-200 ${
-              dark ? "bg-neutral-800" : "bg-neutral-200"
-            }`}
-            style={{ outline: active === i ? "2px solid #C8FF00" : "2px solid transparent" }}
-          >
-            <div className="w-full h-full flex items-center justify-center">
-              <span className={`text-xs font-medium ${dark ? "text-white/20" : "text-neutral-300"}`}>{i + 1}</span>
-            </div>
-          </button>
-        ))}
-      </div>
-    </div>
+    </>
   );
 }
 
