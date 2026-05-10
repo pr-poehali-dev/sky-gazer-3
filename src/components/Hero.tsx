@@ -30,8 +30,8 @@ export default function Hero() {
           Графический дизайнер
         </p>
         <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-black tracking-tight leading-[0.85] text-white mb-8 uppercase">
-          Меня<br />зовут<br />
-          <span className="text-[#C8FF00]">Анна</span>
+          Кузнецов<br />
+          <span className="text-[#C8FF00]">Александр</span>
         </h1>
         <p className="text-white/70 text-base md:text-lg max-w-md leading-relaxed">
           Создаю визуальные системы, которые говорят сами за себя — от логотипа до упаковки, от экрана до печати.

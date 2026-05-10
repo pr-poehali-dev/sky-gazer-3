@@ -12,22 +12,22 @@ export default function Footer() {
               <div className="flex flex-col gap-2">
                 <h3 className="mb-3 uppercase text-neutral-500 text-xs tracking-[0.3em]">Контакты</h3>
                 <a
-                  href="mailto:hello@example.com"
+                  href="mailto:kuznecovcoast@gmail.com"
                   className="text-white hover:text-[#C8FF00] transition-colors duration-300 text-sm"
                 >
-                  hello@example.com
+                  kuznecovcoast@gmail.com
                 </a>
                 <a
-                  href="https://t.me/username"
+                  href="https://t.me/exavilnes"
                   className="text-white hover:text-[#C8FF00] transition-colors duration-300 text-sm"
                 >
-                  Telegram
+                  @exavilnes
                 </a>
                 <a
-                  href="https://behance.net"
+                  href="tel:+79775862472"
                   className="text-white hover:text-[#C8FF00] transition-colors duration-300 text-sm"
                 >
-                  Behance
+                  8 977 586 24 72
                 </a>
               </div>
               <div className="flex flex-col gap-2">
@@ -59,7 +59,7 @@ export default function Footer() {
                 className="text-[18vw] sm:text-[16vw] lg:text-[13vw] leading-[0.8] text-white font-black tracking-tight uppercase"
                 style={{ WebkitTextStroke: "1px rgba(255,255,255,0.1)" }}
               >
-                АННА
+                КУЗНЕЦОВ
               </h1>
               <div className="text-right">
                 <p className="text-neutral-600 text-xs uppercase tracking-widest">{new Date().getFullYear()}</p>
