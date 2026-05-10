@@ -19,20 +19,27 @@ export default function Promo() {
         <motion.div style={{ y }} className="relative w-full h-full">
           <img
             src="/images/spiral-circles.jpg"
-            alt="Abstract spiral circles"
+            alt="Abstract design"
             className="w-full h-full object-cover"
           />
+          <div className="absolute inset-0 bg-black/50" />
         </motion.div>
       </div>
 
-      <h3 className="absolute top-12 right-6 text-white uppercase z-10 text-sm md:text-base lg:text-lg">
-        Анатомия возможностей
+      <h3 className="absolute top-12 left-8 md:left-16 text-white/60 uppercase z-10 text-xs tracking-[0.4em]">
+        Процесс работы
       </h3>
 
-      <p className="absolute bottom-12 right-6 text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-5xl z-10">
-        Каждая секция — рамка для твоей истории. Формируй её, миксуй и позволь контенту
-        литься в неожиданные паттерны, заставляя листать дальше.
+      <p className="absolute bottom-12 left-8 md:left-16 right-8 md:right-16 text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl max-w-5xl z-10 font-black leading-[0.85] uppercase tracking-tight">
+        Дизайн — это не украшение.<br />
+        <span style={{ WebkitTextStroke: "1px rgba(200,255,0,0.8)", color: "transparent" }}>
+          Это язык.
+        </span>
       </p>
+
+      <div className="absolute bottom-12 right-8 md:right-16 z-10">
+        <div className="w-px h-16 bg-white/20" />
+      </div>
     </div>
   );
 }
